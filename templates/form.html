@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <form action="/" method="get">
-        <label for="username">Username:</label>
-        <input id="username" type="text">
-        <label for="password">Password:</label>
-        <input id="password" type="passowrd">
-        <label for="verify">Verify password:</label>
-        <input id="verify" type="password">
+{{title}} = "User Sign-up"
+
+    <form action="/signup" method="post">
+        <h1>User Sign-Up</h1>
+        <label>Username:
+            <input id="username" type="text" value='{{username}}'>
+        </label>
+        <p class="error">{{name_error}}</p>
+        <label>Password:
+            <input id="password" type="password" value='{{password}}'>
+        </label>
+        <p class="error">{{password_error}}</p>
+        <label>Verify password:
+            <input id="verify" type="password">
+        </label>
         <input type="submit">
     </form>
 

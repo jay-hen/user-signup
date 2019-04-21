@@ -4,21 +4,13 @@ import cgi
 app = Flask(__name__)
 app.config['debug'] = True
 
-@app.route("/")
+title = 'Signup'
+
+@app.route("/", methods=['get'])
 def index():
-    return render_template('form.html')
-
-#def is_legal():
-    #if char in text is "/^\w+$/":
-        #return True
-    #else:
-        #return name_error
-
-@app.route('/', methods=['post'])
-def display_signup():
     return render_template('form.html', username='', password='', name_error='', password_error="")
 
-@app.route('/signup', methods=['get'])
+@app.route('/signup', methods=['post'])
 def validate_form():
     username = cgi.escape(request.form['username'])
     password = cgi.escape(request.form['password'])
@@ -26,33 +18,42 @@ def validate_form():
     name_error = ""
     password_error = ''
 
-    if not username:
-        name_error = "Please, enter a username."
-        username = ''
-    if not password:
-        password_error = "Please, enter a password."
-        password=''
-    elif len(password) < 3:
-        password_error = "Please, enter a password that's between 3 and 20 characters."
-        password=''
-    elif len(password) > 20:
-        password_error = "Please, enter a password that's between 3 and 20 characters."
-        password=''
+    for char in username:
+        if char.isspace():
+            name_error = "Your username cannot contain spaces."
+            username = ""
+        elif not username:
+            name_error = "Please, enter a username."
+            username = ''
+        else:
+            if (len(username) < 3) or (len(username) > 20):
+                name_error = "Please, enter a username that's between 3 and 20 characters."
+                username=''
+
+    for char in password:
+        if char.isspace():
+            password_error = "Your password cannot contain spaces."
+            password = ""
+        elif not password:
+            password_error = "Please, enter a password."
+            password = ''
+        else:
+            if (len(password) < 3) or (len(password) > 20):
+                password_error = "Please, enter a password that's between 3 and 20 characters."
+                password=''
 
     if not name_error and not password_error:
-        return "awyus"
-    else:
-        return render_template('form.html', name_error=name_error, password_error=password_error, username=username, password=password) 
+        return redirect('/success?username={0}'.format(username))
+    
+    return render_template('form.html', name_error=name_error, password_error=password_error, username=username, password=password) 
     #if password != password2:
         #password2_error = "Your passwords muust match."
 
-
-
-
-
-    #if not is_legal(username):
-        #name_error = "Please, enter a username between 3 and 20 characters with no whitespaces."
-        #username = ''
+@app.rute('/success')
+def success():
+    title = "Hello!"
+    username = request.form['username']
+    return render_template('success.html', title=title, usersname=username)
 
 if __name__ == '__main__':
     app.run()

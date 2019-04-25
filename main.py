@@ -59,13 +59,13 @@ def validate_form():
     if password != verify:
         verify_error = "Your passwords need to match."
 
-    if not email:
-        email_error = "Please, enter an email."
 
-        at == 0
-        period == 0
 
         for char in email:
+
+            at == 0
+            period == 0
+
             if char == "@":
                 at += 1
             else:
